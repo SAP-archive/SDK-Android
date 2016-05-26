@@ -8,18 +8,10 @@ This module is an Android interface to the [Recast.AI](https://recast.ai) API. I
 ## Installation
 Just update your build.gradle files:
 
-In your project:
-```gradle
-repositories {
-    maven {
-        url 'https://dl.bintray.com/recast-ai/maven'
-    }
-}
-```
 In your module:
 ```gradle
 dependencies {
-	compile 'ai.recast.sdk_android:sdk-android:1.0.0'
+	compile 'ai.recast.sdk_android:sdk-android:1.0.1'
 }
 ```
 
