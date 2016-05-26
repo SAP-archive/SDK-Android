@@ -27,6 +27,7 @@ public class Client {
     private static final String		recastAPI = "https://api.recast.ai/v1/request";
     private String					token;
     private ExtAudioRecorder        myRecorder;
+    private RecastRecorder          recorder;
 
     /**
      * Initialize a Recast.AI Client with a authentication token
@@ -34,6 +35,7 @@ public class Client {
      */
     public Client(String token) {
         this.token = token;
+        recorder = null;
     }
 
     /**
@@ -61,21 +63,17 @@ public class Client {
 
     /**
      * Starts recording audio from the microphone. Note that the audio must be shorter than 10 seconds to be processed by Recast.AI
-     * @throws RecastException if an error occurs while recording
+     * @throws RecastException if the client is already recording (the recording will stop)
      */
     public synchronized void startRecording() throws RecastException {
-        if (this.myRecorder != null) {
-            this.myRecorder.stop();
-            this.myRecorder.release();
+        if (recorder != null) {
+            try {
+                this.stopRecording();
+            } catch (Exception ignore) {}
+            throw new RecastException("Invalid recording state");
         }
-        try {
-            myRecorder = ExtAudioRecorder.getInstanse(false);
-            myRecorder.setOutputFile(getOutputFile());
-            myRecorder.prepare();
-            myRecorder.start();
-        } catch (Exception e) {
-            throw new RecastException ("Unable to record", e);
-        }
+        recorder = new RecastRecorder(getOutputFile());
+        recorder.startRecording();
     }
 
     /**
@@ -86,21 +84,18 @@ public class Client {
      */
     public synchronized Response stopRecording() throws RecastException {
         Response r;
-        if (this.myRecorder == null) {
+
+        if (this.recorder == null || !this.recorder.isRecording()) {
             throw new RecastException("Illegal recording state");
         }
-        myRecorder.stop();
         try {
+            recorder.stopRecording();
             File f = new File(getOutputFile());
             r = fileRequest(getOutputFile());
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RecastException("Unable to send file to Recast", e);
-        }
-        finally {
-            myRecorder.reset();
-            myRecorder.release();
-            myRecorder = null;
+        } catch (IOException e) {
+            throw new RecastException("Unable to record audio", e);
+        } finally {
+            recorder = null;
         }
         return r;
     }

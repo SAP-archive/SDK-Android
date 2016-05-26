@@ -132,8 +132,9 @@ class ExtAudioRecorder {
                     }
                 }
             } catch (IOException e) {
+                e.printStackTrace();
                 Log.e(ExtAudioRecorder.class.getName(), "Error occured in updateListener, recording is aborted");
-                //stop();
+                stop();
             }
         }
 
