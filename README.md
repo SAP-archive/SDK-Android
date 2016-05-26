@@ -50,6 +50,8 @@ This module contains 5 main classes as follows:
 
 ### Class Client
 The Recast.AI Client can be instanciated with or without a token and provides the following methods:
+
+#### Request:
 * textRequest(String text)
 * textRequest(String text, String token)
 * fileRequest(String filename)
@@ -57,6 +59,13 @@ The Recast.AI Client can be instanciated with or without a token and provides th
 
 These methods both return a Response object.
 The token parameter, if provided, override the token given at the construction of the Client.
+
+#### Audio Recording:
+* startRecording() *Starts the audio recording to a file*
+* stopRecording() *Stops the audio recording, sends the audio to Recast.Ai and returns a Response object*
+
+Note that all these methods should be called in separated tasks because they do http requests.
+
 
 ```java
 import ai.recast.sdk_android.Client;

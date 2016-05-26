@@ -26,7 +26,6 @@ import java.util.List;
 public class Client {
     private static final String		recastAPI = "https://api.recast.ai/v1/request";
     private String					token;
-    private ExtAudioRecorder        myRecorder;
     private RecastRecorder          recorder;
 
     /**

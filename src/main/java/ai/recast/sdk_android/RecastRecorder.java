@@ -36,7 +36,7 @@ class RecastRecorder {
             mBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO, FORMAT);
             // Set frame period and timer interval accordingly
             mFramePeriod = mBufferSize / (2 * 16 * 1 / 8);
-            Log.w(ExtAudioRecorder.class.getName(), "Increasing buffer size to " + Integer.toString(mBufferSize));
+            Log.w(TAG, "Increasing buffer size to " + Integer.toString(mBufferSize));
         }
 
         mRecorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
