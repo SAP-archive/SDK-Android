@@ -1,4 +1,4 @@
-# SDK-Android
+# Recast.AI - SDK-Android
 ![Recast.AI Logo](https://github.com/RecastAI/SDK-NodeJs/blob/master/misc/logo-inline.png)
 Recast.AI official SDK for Android.
 
