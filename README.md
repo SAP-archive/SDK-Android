@@ -11,7 +11,7 @@ Just update your build.gradle files:
 In your module:
 ```gradle
 dependencies {
-		compile 'ai.recast.sdk_android:sdk-android:2.0.0'
+		compile 'ai.recast.sdk_android:sdk-android:3.0.0'
 }
 ```
 
@@ -36,8 +36,8 @@ try {
 This module contains 5 main classes as follows:
 * Client is the client allowing you to make requests to Recast.AI API.
 * Response contains the response from [Recast.AI](https://recast.ai).
-* Sentence represents a sentence of the response.
 * Entity represents an entity found in you user's input as defined in [Recast.AI Manual](https://man.recast.ai/#list-of-entities)
+* Intent represents the intent of your user
 * RecastException is the error thrown by the module.
 
 ### Class Client
@@ -83,20 +83,38 @@ try {
 
 ### Class Response
 The Recast.AI Response is generated after a call with the Client methods and contains the following methods:
-* getSentence() *Returns the first detected sentence*
-* getSentences() *Returns an array of all the sentences*
+* getAct() *Returns the act of the sentence*
+* getType() *Returns the type of the sentence*
+* getSentiment() *Returns the sentiment of the sentence*
 * getEntity(String name) *Returns the first entity matching -name- or null*
 * getEntities(String name) *Returns an array of all entities matching -name- or null*
-* getEntities() *Returns a map<String, Entity[]> containing all the entities detected in the input*
 * getStatus() *Returns the status of the Response*
 * getSource() *Returns the source of the input*
 * getIntent() *Returns the main intent detected by Recast.AI*
 * getIntents() *Returns all intents ordered by probability*
 * getVersion() *Returns the version of the JSON*
+* getUuid() *Returns the uuid of the response*
+* IsAbbreviation() *IsAbbreviation returns whether or not the sentence is asking for an abbreviation*
+* IsEntity() *IsEntity returns whether or not the sentence is asking for an entity*
+* IsDescription() *IsDescription returns whether or not the sentence is asking for an description*
+* IsHuman() *IsHuman returns whether or not the sentence is asking for an human*
+* IsLocation() *IsLocation returns whether or not the sentence is asking for an location*
+* IsNumber() *IsNumber returns whether or not the sentence is asking for an number*
+* IsPositive() *IsPositive returns whether or not the sentiment is positive*
+* IsVeryPositive() *IsVeryPositive returns whether or not the sentiment is very positive*
+* IsNeutral() *IsNeutral returns whether or not the sentiment is neutral*
+* IsNegative() *IsNegative returns whether or not the sentiment is negative*
+* IsVeryNegative() *IsVeryNegative returns whether or not the sentiment is very negative*
+* IsAssert() *IsAssert returns whether or not the sentence is an assertion*
+* IsCommand() *IsCommand returns whether or not the sentence is a command*
+* IsWhQuery() *IsWhQuery returns whether or not the sentence is a wh query*
+* IsYnQuery() *IsYnQuery returns whether or not the sentence is a yes-no question*
+* Get(name string) *Returns the first entity matching -name-*
+* All(name string) *Returns all entities matching -name-*
+
 
 ```java
 resp = client.textRequest("Give me a recipe with Asparagus.");
-Sentence s = resp.getSentence();
 String intent = resp.getIntent();
 if (intent != null && intent.equals("recipe")) {
 	//get all the entities matching 'ingredient'
@@ -106,28 +124,8 @@ if (intent != null && intent.equals("recipe")) {
 }
 ```
 
-### Class Sentence
-The Recast.AI sentence is returned by the the Recast.AI Response methods and provides the following methods:
-* getSource() *Returns the source of the sentence*
-* getType() *Returns the [type](https://man.recast.ai/#types-of-sentence) of the sentence*
-* getAction() *Returns the action of the sentence*
-* getAgent() *Returns the agent of the sentence, can return null*
-* getPolarity() *Returns the polarity of the sentence (positive or negative)*
-* getEntities() *Returns a map with entitiy name as key and arrays of Entity as values*
-* getEntities(String name) *Returns all entities matching -name-*
-* getEntity(String name) *Returns the first entity matching -name-*
-
-```java
-Response resp = client.textRequest("Hello you! How are you doing?");
-Sentence[] s = resp.getSentences();
-// This will print "Hello you!"
-System.out.println(s[0].getSource());
-// This will print "How are you doing?"
-System.out.println(s[1].getSource());
-```
-
 ### Class Entity
-The Recast.AI Entity is returned by Response or Sentence and provides the following methods:
+The Recast.AI Entity is returned by Response and provides the following methods:
 * String getName() *Returns the name of the entity*
 * String getRaw() *Returns the raw text on which the entity was detected*
 * Object getField(String fieldName)
@@ -137,7 +135,7 @@ In addition to getName and getRaw, more attributes can be accessed by the getFie
 * hex
 * value
 * deg
-* formated
+* formatted
 * lng
 * lat
 * unit
