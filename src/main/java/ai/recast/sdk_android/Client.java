@@ -25,7 +25,7 @@ import java.util.Map;
  *
  */
 public class Client {
-    private static final String		recastAPI = "https://api.recast.ai/v1/request";
+    private static final String		recastAPI = "https://api.recast.ai/v2/request";
     private String					token;
 	private String					language;
     private RecastRecorder          recorder;
@@ -124,7 +124,7 @@ public class Client {
      * @throws RecastException if Recast.AI can't process the text
      * @see Response
      */
-	public Response textRequest(String text, Map<String, String> options) {
+	public Response textRequest(String text, Map<String, String> options) throws RecastException {
 		String	recastJson;
 		String	token;
 		String	language;
@@ -214,7 +214,7 @@ public class Client {
     }
 
 
-    private String			doApiRequest(String text, String token, String language) throws RecastException {
+    public String			doApiRequest(String text, String token, String language) throws RecastException {
         URL					obj;
         HttpsURLConnection	con;
         OutputStream		os;
@@ -259,6 +259,7 @@ public class Client {
             }
             recastJson = responseBuffer.toString();
         } else {
+            System.out.println(responseCode);
             throw new RecastException(responseCode);
         }
         return recastJson;

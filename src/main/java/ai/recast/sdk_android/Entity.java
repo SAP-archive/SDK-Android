@@ -13,12 +13,14 @@ import org.json.JSONObject;
 public class Entity {
 
     private String name;
+    private double confidence;
     private JSONObject data;
 
 
     Entity (String name, JSONObject o) {
         this.data = o;
         this.name = name;
+        this.confidence = o.optDouble("confidence");
     }
 
     /**
@@ -30,12 +32,11 @@ public class Entity {
     }
 
     /**
-     * Returns the raw value of the entity, as it was in the output
-     * Same as getField("raw")
-     * @return The raw value of the entity
+     * Returns the confidence of the entity
+     * @return The confidence of the entity
      */
-    public String getRaw() {
-        return (String)this.getField("raw");
+    public double getConfidence() {
+        return this.confidence;
     }
 
 

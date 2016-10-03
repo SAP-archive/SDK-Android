@@ -1,9 +1,12 @@
 package ai.recast.sdk_android;
 
 import org.json.*;
+
+import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * The Response class handles responses from Recast.AI API
@@ -15,18 +18,44 @@ import java.util.LinkedList;
  */
 public class Response {
     private String		source;
-    private String[]	intents;
-    private Sentence[]	sentences;
+    private Intent[]	intents;
+    private Map<String, Entity[]> entities;
     private String		version;
     private String		timestamp;
     private	String		raw;
     private int			status;
 	private String		language;
+    private String      uuid;
+
+
+    private String sentiment;
+    private String act;
+    private String type;
+    private String subtype;
+
+    public static final String ACT_ASSERT = "assert";
+    public static final String ACT_COMMAND = "command";
+    public static final String ACT_WH_QUERY = "wh-query";
+    public static final String ACT_YN_QUERY = "yn-query";
+
+    public static final String TYPE_ABBREVIATION = "abbr:";
+    public static final String TYPE_ENTITY = "enty:";
+    public static final String TYPE_DESCRIPTION = "desc:";
+    public static final String TYPE_HUMAN = "hum:";
+    public static final String TYPE_NUMBER = "loc:";
+    public static final String TYPE_LOCATION = "num:";
+
+    public static final String SENTIMENT_POSITIVE = "positive";
+    public static final String SENTIMENT_VERY_POSITIVE = "vpositive";
+    public static final String SENTIMENT_NEGATIVE = "negative";
+    public static final String SENTIMENT_VERY_NEGATIVE = "vnegative";
+    public static final String SENTIMENT_NEUTRAL = "neutral";
+
 
     Response(String json) throws RecastException {
         JSONArray	resultIntents = null;
-        JSONArray	resultSentences = null;
         JSONObject	result;
+        Pattern typePattern;
         this.raw = json;
 
         try {
@@ -37,18 +66,39 @@ public class Response {
             this.timestamp = result.getString("timestamp");
             this.status = result.getInt("status");
 			this.language = result.getString("language");
+            this.type = result.getString("type");
+            this.act = result.getString("act");
+            this.sentiment = result.getString("sentiment");
+            this.uuid = result.getString("uuid");
 
-            resultIntents = result.getJSONArray("intents");
-            resultSentences = result.getJSONArray("sentences");
+            JSONObject resultEntities = result.optJSONObject("entities");
+            this.entities = new HashMap<String,Entity[]>();
+            if (resultEntities.length() != 0) {
+                Iterator<String> it = resultEntities.keys();
 
-            this.sentences = new Sentence[resultSentences.length()];
-            for (int i = 0; i < this.sentences.length; ++i) {
-                this.sentences[i] = new Sentence(resultSentences.getJSONObject(i));
+                while (it.hasNext()) {
+                    String entityName = it.next();
+                    JSONArray entity = resultEntities.optJSONArray(entityName);
+                    Entity[] values = new Entity[entity.length()];
+                    for (int i = 0; i < values.length; i++) {
+                        values[i] = new Entity(entityName, entity.optJSONObject(i));
+                    }
+                    this.entities.put(entityName, values);
+                }
             }
 
-            this.intents = new String[resultIntents.length()];
+            resultIntents = result.getJSONArray("intents");
+            this.intents = new Intent[resultIntents.length()];
             for (int i = 0; i < this.intents.length; ++i) {
-                this.intents[i] = resultIntents.getString(i);
+                this.intents[i] = new Intent(resultIntents.getJSONObject(i));
+            }
+
+            typePattern = Pattern.compile("(\\w+:).*");
+            Matcher m = typePattern.matcher(this.type);
+            if (m.find()) {
+                this.subtype = m.group(1);
+            } else {
+                this.subtype = this.type;
             }
         } catch (Exception e) {
             throw new RecastException("Invalid JSON", e);
@@ -63,12 +113,17 @@ public class Response {
         return this.source;
     }
 
+    /**
+     * Returns the uuid of the response
+     * @return The uuid of the response
+     */
+    public String getUuid() { return this.uuid; }
 
     /**
      * Returns the intent that matches with the input or null otherwise
      * @return The matched intent
      */
-    public String getIntent() {
+    public Intent getIntent() {
         if (this.intents.length > 0) {
             return this.intents[0];
         }
@@ -83,9 +138,18 @@ public class Response {
      * Returns an array of all the intents, ordered by propability
      * @return All matched intents
      */
-    public String[] getIntents() {
+    public Intent[] getIntents() {
         return this.intents;
     }
+
+    /**
+     * Returns the json received from Recast
+     * @return The raw json string
+     */
+    public String getRaw() {
+        return this.raw;
+    }
+
 
     /**
      * Returns the status of the request
@@ -104,28 +168,10 @@ public class Response {
     }
 
     /**
-     * Returns all sentences
-     * @return An array of Sentences
-     * @see Sentence
-     */
-    public Sentence[] getSentences() {
-        return this.sentences;
-    }
-
-    /**
-     * Returns the first sentence
-     * @return The first sentence
-     * @see Sentence
-     */
-    public Sentence getSentence() {
-        return this.sentences[0];
-    }
-
-    /**
      * Returns the timestamp of the request
      * @return The timestampt of the request
      */
-    public String getRequest() {
+    public String getTimestamp() {
         return this.timestamp;
     }
 
@@ -138,13 +184,11 @@ public class Response {
     public Entity getEntity(String name) {
         Entity e;
 
-        for (Sentence s : this.sentences) {
-            e = s.getEntity(name);
-            if (e != null) {
-                return e;
-            }
+        Entity[] ents = this.entities.get(name);
+        if (ents == null || ents.length == 0) {
+            return null;
         }
-        return null;
+        return ents[0];
     }
 
     /**
@@ -154,35 +198,73 @@ public class Response {
      * @see Entity
      */
     public Entity[] getEntities(String name) {
-        Map<String, Entity[]> tmp  = this.getEntities();
-        return tmp.get(name);
+        return this.entities.get(name);
     }
 
-    /**
-     * Returns an Map of all entities with names as keys and arrays of entities as values
-     * @return A map of all entities
-     * @see Entity
-     */
-    public Map<String, Entity[]> getEntities() {
-        Map<String,Entity[]> res = new HashMap<String,Entity[]>();
-        Map<String,LinkedList<Entity>> tmp = new HashMap<String,LinkedList<Entity>>();
-        for (Sentence s : this.sentences) {
-            Map<String, Entity[]> sentenceEntities = s.getEntities();
-            for (Map.Entry<String, Entity[]> entry : sentenceEntities.entrySet()) {
-                if (tmp.get(entry.getKey()) == null) {
-                    tmp.put(entry.getKey(), new LinkedList<Entity>());
-                }
-                Entity[] ent = entry.getValue();
-                for (Entity e : ent) {
-                    tmp.get(entry.getKey()).add(e);
-                }
-            }
-
-        }
-        for (Map.Entry<String, LinkedList<Entity>> entry : tmp.entrySet()) {
-            String name = entry.getKey();
-            res.put(name, entry.getValue().toArray(new Entity[0]));
-        }
-        return res;
+    public String getAct() {
+        return act;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getSentiment() {
+        return sentiment;
+    }
+
+    public boolean isCommand() {
+        return this.act.equals(ACT_COMMAND);
+    }
+
+    public boolean isAssert() {
+        return this.act.equals(ACT_ASSERT);
+    }
+
+    public boolean isWhQuery() {
+        return this.act.equals(ACT_WH_QUERY);
+    }
+
+    public boolean isYesNoQuery() {
+        return this.act.equals(ACT_YN_QUERY);
+    }
+
+    public boolean isPositive() { return this.sentiment.equals(SENTIMENT_POSITIVE); }
+
+    public boolean isVeryPositive() {
+        return this.sentiment.equals(SENTIMENT_VERY_POSITIVE);
+    }
+
+    public boolean isNeutral() {
+        return this.sentiment.equals(SENTIMENT_NEUTRAL);
+    }
+
+    public boolean isNegative() {
+        return this.sentiment.equals(SENTIMENT_NEGATIVE);
+    }
+
+    public boolean isVeryNegative() {
+        return this.sentiment.equals(SENTIMENT_VERY_NEGATIVE);
+    }
+
+    public boolean isAbbreviation() {
+        return this.subtype.equals(TYPE_ABBREVIATION);
+    }
+
+    public boolean isEntity() { return this.subtype.equals(TYPE_ENTITY); }
+
+    public boolean isDescription() { return this.subtype.equals(TYPE_DESCRIPTION); }
+
+    public boolean isHuman() {
+        return this.subtype.equals(TYPE_HUMAN);
+    }
+
+    public boolean isLocation() {
+        return this.subtype.equals(TYPE_LOCATION);
+    }
+
+    public boolean isNumber() {
+        return this.subtype.equals(TYPE_NUMBER);
+    }
+
 }
