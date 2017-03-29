@@ -12,7 +12,7 @@ public class Intent {
     }
 
     Intent(JSONObject obj) {
-        this(obj.optString("name"), obj.optDouble("confidence"));
+        this(obj.optString("slug"), obj.optDouble("confidence"));
     }
 
     public double getConfidence() {

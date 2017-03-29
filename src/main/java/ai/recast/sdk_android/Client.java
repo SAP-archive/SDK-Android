@@ -30,6 +30,8 @@ public class Client {
 	private String					language;
     private RecastRecorder          recorder;
 
+    public Request request;
+
     /**
      * Initialize a Recast.AI Client with a authentication token
      * @param token Your token from Recast.AI
@@ -38,12 +40,16 @@ public class Client {
         this.token = token;
 		this.language = null;
         this.recorder = null;
+
+        this.request = new Request(token);
     }
 
 	public Client(String token, String language) {
 		this.token = token;
 		this.language = language;
 		this.recorder = null;
+
+		this.request = new Request(token, language);
 	}
 
     /**
@@ -69,28 +75,28 @@ public class Client {
 		this.language = language;
 	}
 
-    private static String getOutputFile() {
-        File recastDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/RecastAudio");
-        if (!recastDir.exists())
-            recastDir.mkdir();
-        String filepath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        return filepath + "/RecastAudio/recast_audio.wav";
-    }
+   private static String getOutputFile() {
+       File recastDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/RecastAudio");
+       if (!recastDir.exists())
+           recastDir.mkdir();
+       String filepath = Environment.getExternalStorageDirectory().getAbsolutePath();
+       return filepath + "/RecastAudio/recast_audio.wav";
+   }
 
     /**
      * Starts recording audio from the microphone. Note that the audio must be shorter than 10 seconds to be processed by Recast.AI
      * @throws RecastException if the client is already recording (the recording will stop)
      */
-    public synchronized void startRecording() throws RecastException {
-        if (recorder != null) {
-            try {
-                this.stopRecording();
-            } catch (Exception ignore) {}
-            throw new RecastException("Invalid recording state");
-        }
-        recorder = new RecastRecorder(getOutputFile());
-        recorder.startRecording();
-    }
+   public synchronized void startRecording() throws RecastException {
+       if (recorder != null) {
+           try {
+               this.stopRecording();
+           } catch (Exception ignore) {}
+           throw new RecastException("Invalid recording state");
+       }
+       recorder = new RecastRecorder(getOutputFile());
+       recorder.startRecording();
+   }
 
     /**
      * Stops recording from the microphone and returns the Response corresponding to the audio input after beeing processed
@@ -98,23 +104,23 @@ public class Client {
      * @throws RecastException if the Client is not recording of if an error occurs (invalid audio...)
      * @see Response
      */
-    public synchronized Response stopRecording() throws RecastException {
-        Response r;
+   public synchronized Response stopRecording() throws RecastException {
+       Response r;
 
-        if (this.recorder == null || !this.recorder.isRecording()) {
-            throw new RecastException("Illegal recording state");
-        }
-        try {
-            recorder.stopRecording();
-            File f = new File(getOutputFile());
-            r = fileRequest(getOutputFile());
-        } catch (IOException e) {
-            throw new RecastException("Unable to record audio", e);
-        } finally {
-            recorder = null;
-        }
-        return r;
-    }
+       if (this.recorder == null || !this.recorder.isRecording()) {
+           throw new RecastException("Illegal recording state");
+       }
+       try {
+           recorder.stopRecording();
+           File f = new File(getOutputFile());
+           r = fileRequest(getOutputFile());
+       } catch (IOException e) {
+           throw new RecastException("Unable to record audio", e);
+       } finally {
+           recorder = null;
+       }
+       return r;
+   }
 
     /**
      * Performs a text request to Recast.AI

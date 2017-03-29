@@ -20,7 +20,9 @@ public class Entity {
     Entity (String name, JSONObject o) {
         this.data = o;
         this.name = name;
-        this.confidence = o.optDouble("confidence");
+        if(o != null){
+        	this.confidence = o.optDouble("confidence");
+        }
     }
 
     /**

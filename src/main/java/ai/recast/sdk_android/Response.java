@@ -1,4 +1,4 @@
-package ai.recast.sdk_android;
+//package ai.recast.sdk_android;
 
 import org.json.*;
 
@@ -66,10 +66,11 @@ public class Response {
             this.timestamp = result.getString("timestamp");
             this.status = result.getInt("status");
 			this.language = result.getString("language");
-            this.type = result.getString("type");
+            this.type = result.optString("type", null);
             this.act = result.getString("act");
             this.sentiment = result.getString("sentiment");
             this.uuid = result.getString("uuid");
+            
 
             JSONObject resultEntities = result.optJSONObject("entities");
             this.entities = new HashMap<String,Entity[]>();
@@ -92,13 +93,15 @@ public class Response {
             for (int i = 0; i < this.intents.length; ++i) {
                 this.intents[i] = new Intent(resultIntents.getJSONObject(i));
             }
-
-            typePattern = Pattern.compile("(\\w+:).*");
-            Matcher m = typePattern.matcher(this.type);
-            if (m.find()) {
-                this.subtype = m.group(1);
-            } else {
-                this.subtype = this.type;
+            
+            if(this.type != null){
+            	typePattern = Pattern.compile("(\\w+:).*");
+                Matcher m = typePattern.matcher(this.type);
+                if (m.find()) {
+                    this.subtype = m.group(1);
+                } else {
+                    this.subtype = this.type;
+                }
             }
         } catch (Exception e) {
             throw new RecastException("Invalid JSON", e);
