@@ -11,7 +11,7 @@ Just update your build.gradle files:
 In your module:
 ```gradle
 dependencies {
-		compile 'ai.recast.sdk_android:sdk-android:3.0.0'
+		compile 'ai.recast.sdk_android:sdk-android:4.0.0'
 }
 ```
 
