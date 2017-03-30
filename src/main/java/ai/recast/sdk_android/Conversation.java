@@ -132,7 +132,13 @@ public class Conversation {
 		this.doApiRequest(body);
 	}
 
+	public void resetConversation(){
+		String body = "{\"conversation_token\": \"" + this.conversationToken + "\"}";
+		this.doApiRequest(body);
+	}
+
 	public String doApiRequest(String body){
+		System.out.println("body: " + body);
 			String url = converseAPI;
 			try {
 				CloseableHttpClient httpClient = HttpClientBuilder.create().build();
