@@ -11,7 +11,7 @@ Just update your build.gradle files:
 In your module:
 ```gradle
 dependencies {
-		compile 'ai.recast.sdk_android:sdk-android:3.0.0'
+  compile 'ai.recast.sdk_android:sdk-android:4.0.0'
 }
 ```
 
@@ -23,9 +23,9 @@ Client client = new Client(YOUR_TOKEN);
 Response resp;
 
 try {
-		resp = client.textRequest(YOUR_TEXT);
+  resp = client.textRequest(YOUR_TEXT);
 } catch (RecastException e) {
-		// error
+  // error
 }
 ```
 
@@ -71,23 +71,23 @@ Client client = new Client(YOUR_TOKEN);
 Response resp;
 
 try {
-	resp = client.textRequest("Hello World!");
-	// Do your code...
+  resp = client.textRequest("Hello World!");
+  // Do your code...
 } catch (Exception e) {
-	// Handle error
+  // Handle error
 }
 
 try {
-	resp = client.fileRequest("my_file.wav");
-	// Do you code..
+  resp = client.fileRequest("my_file.wav");
+  // Do you code..
 } catch (Exception e) {
-	// Handle error
+  // Handle error
 }
 
 try {
-	Conversation conversation = client.textConverse("Hello, my name is Paul");
+  Conversation conversation = client.textConverse("Hello, my name is Paul");
 } catch (Exception e) {
-	// Handle error
+  // Handle error
 }
 ```
 
@@ -127,10 +127,10 @@ The Recast.AI Response is generated after a call with the Client methods and con
 resp = client.textRequest("Give me a recipe with Asparagus.");
 String intent = resp.getIntent();
 if (intent != null && intent.equals("recipe")) {
-	//get all the entities matching 'ingredient'
-	Entities[] entities = resp.getEntities("ingredient");
+  //get all the entities matching 'ingredient'
+  Entities[] entities = resp.getEntities("ingredient");
 
-	// ...
+  // ...
 }
 ```
 
@@ -164,10 +164,10 @@ Refer to [Recast.Ai Entities Manual](https://man.recast.ai/#list-of-entities) fo
 ```java
 Response resp = client.textRequest("What's the weather in San Francisco?");
 if (resp.getIntent() != null && resp.getIntent().equals("weather")) {
-	Entity e = resp.getEntity("location");
-	if (e != null) {
-		System.out.printf("You asked me for a weather in %s\n", (String)e.getField("formated"));
-	}
+  Entity e = resp.getEntity("location");
+  if (e != null) {
+    System.out.printf("You asked me for a weather in %s\n", (String)e.getField("formated"));
+  }
 }
 ```
 
@@ -187,7 +187,7 @@ You can follow us on Twitter at [@recastai](https://twitter.com/recastai) for up
 
 ## License
 
-Copyright (c) [2016] [Recast.AI](https://recast.ai)
+Copyright (c) [2017] [Recast.AI](https://recast.ai)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
