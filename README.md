@@ -1,5 +1,5 @@
 # Recast.AI - SDK-Android
-![Recast.AI Logo](https://github.com/RecastAI/SDK-NodeJs/blob/master/misc/logo-inline.png)
+![Recast.AI Logo](https://github.com/RecastAI/SDK-Android/blob/master/misc/logo-inline.png)
 Recast.AI official SDK for Android.
 
 ## Synopsis
@@ -18,7 +18,6 @@ dependencies {
 ## Usage
 ```java
 import ai.recast.sdk_android.Client;
-import ai.recast.sdk_android.Response;
 
 Client client = new Client(YOUR_TOKEN);
 Response resp;
@@ -41,13 +40,11 @@ This module contains 5 main classes as follows:
 * RecastException is the error thrown by the module.
 
 ### Class Client
-The Recast.AI Client can be instanciated with or without a token and provides the following methods:
+The Recast.AI Client can be instanciated with a token and provides the following methods:
 
 #### Request:
 * textRequest(String text)
-* textRequest(String text, Map<String,String> opts)
 * fileRequest(String filename)
-* fileRequest(String filename, Map<String,String> opts)
 
 These methods both return a Response object.
 The token and language parameters, if provided, override those given at the construction of the Client.
@@ -61,7 +58,6 @@ Note that all these methods should be called in separated tasks because they do 
 
 ```java
 import ai.recast.sdk_android.Client;
-import ai.recast.sdk_android.Response;
 
 Client client = new Client(YOUR_TOKEN);
 Response resp;
