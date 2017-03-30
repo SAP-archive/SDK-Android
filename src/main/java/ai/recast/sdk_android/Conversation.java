@@ -3,6 +3,7 @@ package ai.recast.sdk_android;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -120,13 +121,14 @@ public class Conversation {
 		this.memory.setMemory(name, newMemoryEntity);
 		String memory = this.memory.convertMemory();
 		String body = "{\"conversation_token\":\"" + this.conversationToken + "\", \"memory\":" + memory + "}";
+		System.out.println(body);
 		this.doApiRequest(body);
 	}
 
 	public void resetMemory(){
 		this.memory.resetMemory();
 		String body = "{\"conversation_token\":\"" + this.conversationToken + "\",";
-		body = body + "\"memory\":{}}";
+		body = body + "\"memory\":null}";
 		this.doApiRequest(body);
 	}
 
@@ -134,7 +136,8 @@ public class Conversation {
 			String url = converseAPI;
 			try {
 				CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		        HttpPost request = new HttpPost(url);
+//		        HttpPost request = new HttpPost(url);
+		        HttpPut request = new HttpPut(url);
 		        StringEntity params;
 				params = new StringEntity(body);
 				request.addHeader("Authorization", "Token " + this.token);
