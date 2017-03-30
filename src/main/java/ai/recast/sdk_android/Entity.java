@@ -16,7 +16,6 @@ public class Entity {
     private double confidence;
     private JSONObject data;
 
-
     Entity (String name, JSONObject o) {
         this.data = o;
         this.name = name;
@@ -47,12 +46,4 @@ public class Entity {
      * @param name The name of the field
      * @return The value of the field or null
      */
-    public Object getField(String name) {
-        return this.data.opt(name);
-    }
-
-    public String toString() {
-        return this.getName();
-    }
-
 }

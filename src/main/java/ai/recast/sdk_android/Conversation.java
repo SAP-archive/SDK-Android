@@ -1,18 +1,19 @@
 package ai.recast.sdk_android;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.json.*;
 
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 
@@ -115,57 +116,41 @@ public class Conversation {
 		return replies;
 	}
 
-	public void setMemoryEntity(int index, Entity newEntity){
-		this.memory.setMemory(index, newEntity);
-		Entity ent = this.memory.getEntities().get(index);
-		JSONObject obj = new JSONObject(ent);
+	public void setMemoryEntity(String name, MemoryEntity newMemoryEntity){
+		this.memory.setMemory(name, newMemoryEntity);
+		String memory = this.memory.convertMemory();
+		String body = "{\"conversation_token\":\"" + this.conversationToken + "\", \"memory\":" + memory + "}";
+		this.doApiRequest(body);
 	}
 
-	public String doApiRequest(String text, String token) throws RecastException {
-      URL					obj;
-      HttpsURLConnection	con;
-      OutputStream		os;
-      int					responseCode;
-      String				inputLine;
-      StringBuffer		responseBuffer;
-      String				recastJson;
+	public void resetMemory(){
+		this.memory.resetMemory();
+		String body = "{\"conversation_token\":\"" + this.conversationToken + "\",";
+		body = body + "\"memory\":{}}";
+		this.doApiRequest(body);
+	}
 
-      try {
-          obj = new URL(converseAPI);
-          con = (HttpsURLConnection) obj.openConnection();
-          con.setRequestMethod("POST");
-          con.setRequestProperty("Authorization",  "Token " + token);
-          con.setDoOutput(true);
-          text = "text=" + text;
-          os = con.getOutputStream();
-          os.write(text.getBytes());
-          os.flush();
-          os.close();
+	public String doApiRequest(String body){
+			String url = converseAPI;
+			try {
+				CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		        HttpPost request = new HttpPost(url);
+		        StringEntity params;
+				params = new StringEntity(body);
+				request.addHeader("Authorization", "Token " + this.token);
+		        request.setEntity(params);
+		        HttpResponse result = httpClient.execute(request);
+		        String json = EntityUtils.toString(result.getEntity(), "UTF-8");
+		        System.out.println(json);
+		        return json;
+			} catch (UnsupportedEncodingException e) {
+				throw new RecastException("Unable to read response from Recast", e);
+			} catch (ParseException e) {
+				throw new RecastException("Unable to read response from Recast", e);
+			} catch (IOException e) {
+				throw new RecastException("Unable to read response from Recast", e);
+			}
 
-          responseCode = con.getResponseCode();
-      } catch (MalformedURLException e) {
-          throw new RecastException("Invalid URL", e);
-      } catch (IOException e) {
-          throw new RecastException("Unable to read response from Recast", e);
-      }
-
-      if (responseCode == HttpsURLConnection.HTTP_OK) {
-          try {
-              BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-              responseBuffer = new StringBuffer();
-              while ((inputLine = reader.readLine()) != null) {
-                  responseBuffer.append(inputLine);
-              }
-              reader.close();
-          } catch (IOException e) {
-              throw new RecastException("Unable to read response from Recast", e);
-          }
-          recastJson = responseBuffer.toString();
-      } else {
-          System.out.println(responseCode);
-          throw new RecastException(responseCode);
-      }
-      return recastJson;
 	}
 
 	public String getRaw() {

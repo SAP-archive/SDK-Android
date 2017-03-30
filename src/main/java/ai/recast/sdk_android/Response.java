@@ -80,6 +80,7 @@ public class Response {
                 while (it.hasNext()) {
                     String entityName = it.next();
                     JSONArray entity = resultEntities.optJSONArray(entityName);
+                    
                     Entity[] values = new Entity[entity.length()];
                     for (int i = 0; i < values.length; i++) {
                         values[i] = new Entity(entityName, entity.optJSONObject(i));
