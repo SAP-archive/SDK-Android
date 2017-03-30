@@ -142,15 +142,20 @@ public class Conversation {
 			String url = converseAPI;
 			try {
 				CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-//		        HttpPost request = new HttpPost(url);
-		        HttpPut request = new HttpPut(url);
-		        StringEntity params;
-				params = new StringEntity(body);
-				request.addHeader("Authorization", "Token " + this.token);
-		        request.setEntity(params);
-		        HttpResponse result = httpClient.execute(request);
-		        String json = EntityUtils.toString(result.getEntity(), "UTF-8");
-		        System.out.println(json);
+				HttpDelete requestD = new HttpDelete(url);
+				HttpPut request = new HttpPut(url);
+				String json = null;
+				if(putOrDelete == 1){
+					requestD.addHeader("Authorization", "Token " + this.token);
+			        HttpResponse result = httpClient.execute(requestD);
+			        json = EntityUtils.toString(result.getEntity(), "UTF-8");
+				} else {
+					StringEntity params;
+					params = new StringEntity(body);
+					request.addHeader("Authorization", "Token " + this.token);
+			        request.setEntity(params);
+			        HttpResponse result = httpClient.execute(request);
+			        json = EntityUtils.toString(result.getEntity(), "UTF-8");
 		        return json;
 			} catch (UnsupportedEncodingException e) {
 				throw new RecastException("Unable to read response from Recast", e);
