@@ -1,5 +1,5 @@
 # Recast.AI - SDK-Android
-![Recast.AI Logo](https://github.com/RecastAI/SDK-Android/blob/master/misc/logo-inline.png)
+![Recast.AI Logo](https://cdn.recast.ai/brand/recast-ai-logo-inline.png)
 Recast.AI official SDK for Android.
 
 ## Synopsis
@@ -32,11 +32,15 @@ try {
 ## Specs
 ### Classes
 
-This module contains 5 main classes as follows:
+This module contains 9 main classes as follows:
 * Client is the client allowing you to make requests to Recast.AI API.
 * Response contains the response from [Recast.AI](https://recast.ai).
 * Entity represents an entity found in you user's input as defined in [Recast.AI Manual](https://man.recast.ai/#list-of-entities)
 * Intent represents the intent of your user
+* Action represents the actions of a conversation
+* Memory represents the memory of a conversation
+* MemoryEntity represents the entity inside the memory object
+* Conversation allowing you to handle a conversation
 * RecastException is the error thrown by the module.
 
 ### Class Client
@@ -47,7 +51,11 @@ The Recast.AI Client can be instanciated with a token and provides the following
 * fileRequest(String filename)
 
 These methods both return a Response object.
-The token and language parameters, if provided, override those given at the construction of the Client.
+
+#### Conversation
+* textConverse(String text)
+
+This method return a Conversation object.
 
 #### Audio Recording:
 * startRecording() *Starts the audio recording to a file*
@@ -72,6 +80,12 @@ try {
 try {
 	resp = client.fileRequest("my_file.wav");
 	// Do you code..
+} catch (Exception e) {
+	// Handle error
+}
+
+try {
+	Conversation conversation = client.textConverse("Hello, my name is Paul");
 } catch (Exception e) {
 	// Handle error
 }
