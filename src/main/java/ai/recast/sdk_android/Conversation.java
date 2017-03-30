@@ -121,23 +121,22 @@ public class Conversation {
 		this.memory.setMemory(name, newMemoryEntity);
 		String memory = this.memory.convertMemory();
 		String body = "{\"conversation_token\":\"" + this.conversationToken + "\", \"memory\":" + memory + "}";
-		System.out.println(body);
-		this.doApiRequest(body);
+		this.doApiRequest(body, 0);
 	}
 
 	public void resetMemory(){
 		this.memory.resetMemory();
 		String body = "{\"conversation_token\":\"" + this.conversationToken + "\",";
 		body = body + "\"memory\":null}";
-		this.doApiRequest(body);
+		this.doApiRequest(body, 0);
 	}
 
 	public void resetConversation(){
 		String body = "{\"conversation_token\": \"" + this.conversationToken + "\"}";
-		this.doApiRequest(body);
+		this.doApiRequest(body, 1);
 	}
 
-	public String doApiRequest(String body){
+	public String doApiRequest(String body, int putOrDelete){
 		System.out.println("body: " + body);
 			String url = converseAPI;
 			try {
