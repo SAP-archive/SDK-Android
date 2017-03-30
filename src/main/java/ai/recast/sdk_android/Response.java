@@ -1,4 +1,4 @@
-//package ai.recast.sdk_android;
+package ai.recast.sdk_android;
 
 import org.json.*;
 
@@ -70,7 +70,7 @@ public class Response {
             this.act = result.getString("act");
             this.sentiment = result.getString("sentiment");
             this.uuid = result.getString("uuid");
-            
+
 
             JSONObject resultEntities = result.optJSONObject("entities");
             this.entities = new HashMap<String,Entity[]>();
@@ -80,7 +80,7 @@ public class Response {
                 while (it.hasNext()) {
                     String entityName = it.next();
                     JSONArray entity = resultEntities.optJSONArray(entityName);
-                    
+
                     Entity[] values = new Entity[entity.length()];
                     for (int i = 0; i < values.length; i++) {
                         values[i] = new Entity(entityName, entity.optJSONObject(i));
@@ -94,7 +94,7 @@ public class Response {
             for (int i = 0; i < this.intents.length; ++i) {
                 this.intents[i] = new Intent(resultIntents.getJSONObject(i));
             }
-            
+
             if(this.type != null){
             	typePattern = Pattern.compile("(\\w+:).*");
                 Matcher m = typePattern.matcher(this.type);

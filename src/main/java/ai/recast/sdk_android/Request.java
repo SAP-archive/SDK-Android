@@ -1,6 +1,6 @@
+package ai.recast.sdk_android;
 
-
-//import android.os.Environment;
+import android.os.Environment;
 import java.net.URL;
 
 import java.io.BufferedReader;
@@ -15,22 +15,22 @@ import java.util.List;
 import java.util.Map;
 
 public class Request {
-	
+
 	private static final String	recastAPI = "https://api.recast.ai/v2/request";
 	private static final String converseAPI = "https://api.recast.ai/v2/converse";
-	
+
 	public String token;
 	public String language;
-	
+
 	public Request(String token){
 		this.token = token;
 	}
-	
+
 	public Request(String token, String language){
 		this.token = token;
 		this.language = language;
 	}
-	
+
 	/**
      * Performs a text request to Recast.AI with the token of the Client
      * @param myText The text to be processed
@@ -69,7 +69,7 @@ public class Request {
 			throw new RecastException("Invalid URL", e);
 		}
 	}
-	
+
 	private String sendAudioFile(String name, String token, String language) throws RecastException {
         String recastJson = "";
 		StringBuilder sb;
@@ -96,7 +96,7 @@ public class Request {
         }
         return sb.toString();
 	}
-	
+
 	public String doApiRequest(String text, String token, String language, URL obj) throws RecastException {
 //        URL					obj;
         HttpsURLConnection	con;

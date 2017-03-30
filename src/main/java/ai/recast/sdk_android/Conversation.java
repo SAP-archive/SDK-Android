@@ -155,6 +155,7 @@ public class Conversation {
 			        request.setEntity(params);
 			        HttpResponse result = httpClient.execute(request);
 			        json = EntityUtils.toString(result.getEntity(), "UTF-8");
+				}
 		        return json;
 			} catch (UnsupportedEncodingException e) {
 				throw new RecastException("Unable to read response from Recast", e);
