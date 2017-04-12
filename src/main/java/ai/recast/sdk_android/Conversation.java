@@ -39,6 +39,12 @@ public class Conversation {
 
 	private String token;
 
+        public static final String SENTIMENT_POSITIVE = "positive";
+        public static final String SENTIMENT_VERY_POSITIVE = "vpositive";
+        public static final String SENTIMENT_NEGATIVE = "negative";
+        public static final String SENTIMENT_VERY_NEGATIVE = "vnegative";
+        public static final String SENTIMENT_NEUTRAL = "neutral";
+
 	public Conversation(String json, String token) throws RecastException {
 		this.setToken(token);
 		JSONArray	resultIntents = null;
@@ -54,7 +60,9 @@ public class Conversation {
             this.version = result.getString("version");
             this.timestamp = result.getString("timestamp");
             this.status = result.getInt("status");
-			this.language = result.getString("language");
+            this.language = result.getString("language");
+            this.processing_language = result.getString("processing_language");
+            this.sentiment = result.getString("sentiment");
             this.uuid = result.getString("uuid");
             this.conversationToken = result.getString("conversation_token");
 
@@ -115,6 +123,24 @@ public class Conversation {
 			replies = replies + rep;
 		}
 		return replies;
+	}
+
+        public boolean isPositive() { return this.sentiment.equals(SENTIMENT_POSITIVE); }
+
+        public boolean isVeryPositive() {
+	    return this.sentiment.equals(SENTIMENT_VERY_POSITIVE);
+	}
+
+        public boolean isNeutral() {
+	    return this.sentiment.equals(SENTIMENT_NEUTRAL);
+	}
+
+        public boolean isNegative() {
+	    return this.sentiment.equals(SENTIMENT_NEGATIVE);
+	}
+
+        public boolean isVeryNegative() {
+	    return this.sentiment.equals(SENTIMENT_VERY_NEGATIVE);
 	}
 
 	public void setMemoryEntity(String name, MemoryEntity newMemoryEntity){
