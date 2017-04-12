@@ -65,7 +65,8 @@ public class Response {
             this.version = result.getString("version");
             this.timestamp = result.getString("timestamp");
             this.status = result.getInt("status");
-			this.language = result.getString("language");
+            this.language = result.getString("language");
+            this.processing_language = result.getString("processing_language");
             this.type = result.optString("type", null);
             this.act = result.getString("act");
             this.sentiment = result.getString("sentiment");
