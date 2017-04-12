@@ -56,6 +56,7 @@ public class SdkTests {
             "              ]" +
             "        }," +
             "        \"language\": \"en\"," +
+	    "        \"processing_language\": \"en\"," +
             "        \"version\": \"2.0.0\"," +
             "        \"timestamp\": \"\"," +
             "        \"uuid\": \"34b3f548-4aaf-4e3a-add1-f8f29f30e7fb\"," +
@@ -89,6 +90,7 @@ public class SdkTests {
         assertTrue(r.getEntity("fakename") == null);
         assertTrue(r.getStatus() == 200);
         assertTrue(r.getLanguage().equals("en"));
+	assertTrue(r.getProcessingLanguage().equals("en"));
         assertTrue(r.getUuid().equals("34b3f548-4aaf-4e3a-add1-f8f29f30e7fb"));
 
         assertTrue(r.getIntents().length == 1);

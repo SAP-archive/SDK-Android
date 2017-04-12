@@ -27,12 +27,14 @@ public class Conversation {
 	private String source; // String: the user input											ok
 	private String[] replies; // Array[String]: all the replies									ok
 	private Action action; // Object: the action of the conversation							ok
+    	private String sentiment; // String: the sentiment of the input								ok
 	private Action[] nextActions; // Array[Object]: the next actions of the conversation		ok
 	private Memory memory; // Object: the memory of the conversation							ok
 	private Map<String, Entity[]> entities; // Array[Entity]: the array of entities				ok
 	private Intent[] intents; // Array[Object]: all the matched intents							ok
 	private String conversationToken; // String: the conversation token							ok
 	private String language; // String: the language of the input								ok
+        private String processing_language; // String: the language of the input								ok
 	private String version; // String: the API version											ok
 	private String timestamp; // String: the timestamp at the end of the processing				ok
 	private int status; // String: the status of the response									ok

@@ -17,15 +17,16 @@ import java.util.regex.Matcher;
  *
  */
 public class Response {
-    private String		source;
-    private Intent[]	intents;
+    private String		  source;
+    private Intent[]	          intents;
     private Map<String, Entity[]> entities;
-    private String		version;
-    private String		timestamp;
-    private	String		raw;
-    private int			status;
-	private String		language;
-    private String      uuid;
+    private String		  version;
+    private String		  timestamp;
+    private String		  raw;
+    private int			  status;
+    private String		  language;
+    private String                processing_language;
+    private String                uuid;
 
 
     private String sentiment;
@@ -135,9 +136,13 @@ public class Response {
         return null;
     }
 
-	public String getLanguage() {
-		return this.language;
-	}
+    public String getLanguage() {
+	return this.language;
+    }
+
+    public String getProcessingLanguage() {
+	return this.processing_language;
+    }
 
     /**
      * Returns an array of all the intents, ordered by propability
