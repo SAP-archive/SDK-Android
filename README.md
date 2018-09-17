@@ -166,7 +166,7 @@ Response resp = client.textRequest("What's the weather in San Francisco?");
 if (resp.getIntent() != null && resp.getIntent().equals("weather")) {
   Entity e = resp.getEntity("location");
   if (e != null) {
-    System.out.printf("You asked me for a weather in %s\n", (String)e.getField("formated"));
+    System.out.printf("You asked me for a weather in %s\n", (String)e.getField("formatted"));
   }
 }
 ```
