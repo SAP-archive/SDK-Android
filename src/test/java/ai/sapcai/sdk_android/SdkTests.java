@@ -1,4 +1,4 @@
-package ai.recast.sdk_android;
+package ai.sapcai.sdk_android;
 
 import static org.mockito.Mockito.*;
 import org.junit.Test;

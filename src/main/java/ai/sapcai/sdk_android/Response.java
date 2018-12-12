@@ -1,4 +1,4 @@
-package ai.recast.sdk_android;
+package ai.sapcai.sdk_android;
 
 import org.json.*;
 
@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 /**
- * The Response class handles responses from Recast.AI API
+ * The Response class handles responses from SAP Conversational AI API
  *
  * @author Francois Triquet
  * @version 2.0.0
