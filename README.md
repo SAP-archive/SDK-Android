@@ -24,7 +24,7 @@ Response resp;
 
 try {
   resp = client.textRequest(YOUR_TEXT);
-} catch (RecastException e) {
+} catch (SapcaiException e) {
   // error
 }
 ```
@@ -41,7 +41,7 @@ This module contains 9 main classes as follows:
 * Memory represents the memory of a conversation
 * MemoryEntity represents the entity inside the memory object
 * Conversation allowing you to handle a conversation
-* RecastException is the error thrown by the module.
+* SapcaiException is the error thrown by the module.
 
 ### Class Client
 The SAP Conversational AI Client can be instanciated with a token and provides the following methods:
@@ -171,7 +171,7 @@ if (resp.getIntent() != null && resp.getIntent().equals("weather")) {
 }
 ```
 
-### Class RecastException
+### Class SapcaiException
 This exception is thrown when an error occurs during the request
 
 # More

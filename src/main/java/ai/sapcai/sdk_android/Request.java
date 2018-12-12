@@ -35,17 +35,17 @@ public class Request {
      * Performs a text request to SAP Conversational AI with the token of the Client
      * @param myText The text to be processed
      * @return The Response corresponding to the input
-     * @throws RecastException if SAP Conversational AI can't process the text
+     * @throws SapcaiException if SAP Conversational AI can't process the text
      * @see Response
      */
-	public Response doTextRequest(String myText) throws RecastException {
+	public Response doTextRequest(String myText) throws SapcaiException {
 		URL obj;
 		try {
 			obj = new URL(sapcaiAPI);
 			String sapcaiJson = this.doApiRequest(myText, this.token, this.language, obj);
 			return new Response(sapcaiJson);
 		} catch (MalformedURLException e) {
-			throw new RecastException("Invalid URL", e);
+			throw new SapcaiException("Invalid URL", e);
 		}
 	}
 
@@ -53,9 +53,9 @@ public class Request {
      * Performs a voice file request to SAP Conversational AI. Note that the audio must not exceed 10 seconds and be in wav format.
      * @param myfile The name of the file
      * @return The Response corresponding to your input
-     * @throws RecastException if the file is invalid or SAP Conversational AI can't process the file
+     * @throws SapcaiException if the file is invalid or SAP Conversational AI can't process the file
      */
-	public Response doFileRequest (String myfile) throws RecastException {
+	public Response doFileRequest (String myfile) throws SapcaiException {
 		return new Response(this.sendAudioFile(myfile, this.token, this.language));
 	}
 
@@ -66,18 +66,18 @@ public class Request {
 			String sapcaiJson = this.doApiRequest(myText, this.token, this.language, obj);
 			return new Conversation(sapcaiJson, this.token);
 		} catch (MalformedURLException e) {
-			throw new RecastException("Invalid URL", e);
+			throw new SapcaiException("Invalid URL", e);
 		}
 	}
 
-	private String sendAudioFile(String name, String token, String language) throws RecastException {
+	private String sendAudioFile(String name, String token, String language) throws SapcaiException {
         String sapcaiJson = "";
 		StringBuilder sb;
         try {
             MultipartUtility multipart = new MultipartUtility(sapcaiAPI, "UTF-8", token);
             File f = new File(name);
             if (!f.exists()) {
-                throw new RecastException("File not found: " + name);
+                throw new SapcaiException("File not found: " + name);
             }
             multipart.addFilePart("voice", f);
 			if (language != null) {
@@ -92,12 +92,12 @@ public class Request {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RecastException("Error during request", e);
+            throw new SapcaiException("Error during request", e);
         }
         return sb.toString();
 	}
 
-	public String doApiRequest(String text, String token, String language, URL obj) throws RecastException {
+	public String doApiRequest(String text, String token, String language, URL obj) throws SapcaiException {
 //        URL					obj;
         HttpsURLConnection	con;
         OutputStream		os;
@@ -124,9 +124,9 @@ public class Request {
 
             responseCode = con.getResponseCode();
         } catch (MalformedURLException e) {
-            throw new RecastException("Invalid URL", e);
+            throw new SapcaiException("Invalid URL", e);
         } catch (IOException e) {
-            throw new RecastException("Unable to read response from Recast", e);
+            throw new SapcaiException("Unable to read response from SAP Conversational AI", e);
         }
 
         if (responseCode == HttpsURLConnection.HTTP_OK) {
@@ -138,12 +138,12 @@ public class Request {
                 }
                 reader.close();
             } catch (IOException e) {
-                throw new RecastException("Unable to read response from Recast", e);
+                throw new SapcaiException("Unable to read response from SAP Conversational AI", e);
             }
             sapcaiJson = responseBuffer.toString();
         } else {
             System.out.println(responseCode);
-            throw new RecastException(responseCode);
+            throw new SapcaiException(responseCode);
         }
         return sapcaiJson;
 	}

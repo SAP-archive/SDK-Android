@@ -138,10 +138,10 @@ class MultipartUtility {
                 reader.close();
                 httpConn.disconnect();
             } else {
-                throw new RecastException(status);
+                throw new SapcaiException(status);
             }
         } catch (IOException e) {
-            throw new RecastException("Request Failed", e);
+            throw new SapcaiException("Request Failed", e);
         }
         return response;
     }
