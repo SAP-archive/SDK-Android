@@ -1,9 +1,9 @@
 # SAP Conversational AI - SDK-Android
-![SAP Conversational AI Logo](https://cdn.cai.tool.sap/brand/sapcai/sap-cai-black.svg)
+![SAP Conversational AI Logo](https://cdn.cai.tools.sap/brand/sapcai/sap-cai-black.svg)
 SAP Conversational AI official SDK for Android.
 
 ## Synopsis
-This module is an Android interface to the [SAP Conversational AI](https://cai.tool.sap) API. It allows you to make requests to your bots.
+This module is an Android interface to the [SAP Conversational AI](https://cai.tools.sap) API. It allows you to make requests to your bots.
 
 ## Installation
 Just update your build.gradle files:
@@ -34,8 +34,8 @@ try {
 
 This module contains 9 main classes as follows:
 * Client is the client allowing you to make requests to SAP Conversational AI API.
-* Response contains the response from [SAP Conversational AI](https://cai.tool.sap).
-* Entity represents an entity found in you user's input as defined in [SAP Conversational AI Manual](https://cai.tool.sap/docs/#list-of-entities)
+* Response contains the response from [SAP Conversational AI](https://cai.tools.sap).
+* Entity represents an entity found in you user's input as defined in [SAP Conversational AI Manual](https://cai.tools.sap/docs/#list-of-entities)
 * Intent represents the intent of your user
 * Action represents the actions of a conversation
 * Memory represents the memory of a conversation
@@ -159,7 +159,7 @@ In addition to getName and getRaw, more attributes can be accessed by the getFie
 
 SAP Conversational AI entity fields types are dependant on the entity itself, so value returned must be casted depending on the entity you wait.
 
-Refer to [SAP Conversational AI Entities Manual](https://cai.tool.sap/docs/#list-of-entities) for details about entities
+Refer to [SAP Conversational AI Entities Manual](https://cai.tools.sap/docs/#list-of-entities) for details about entities
 
 ```java
 Response resp = client.textRequest("What's the weather in San Francisco?");
@@ -176,18 +176,13 @@ This exception is thrown when an error occurs during the request
 
 # More
 
-You can view the whole API reference at [cai.tool.sap/docs/api-reference](https://cai.tool.sap/docs/api-reference).
-
-
-## Author
-
-François Triquet, francois.triquet@sap.com
+You can view the whole API reference at [cai.tools.sap/docs/api-reference](https://cai.tools.sap/docs/api-reference).
 
 You can follow us on Twitter at [@sapcai](https://twitter.com/sapcai) for updates and releases.
 
 ## License
 
-Copyright (c) [2019] [SAP Conversational AI](https://cai.tool.sap)
+Copyright (c) [2019] [SAP Conversational AI](https://cai.tools.sap)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

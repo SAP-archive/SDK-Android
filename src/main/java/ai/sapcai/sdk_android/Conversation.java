@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class Conversation {
 
-	private static final String converseAPI = "https://api.cai.tool.sap/v2/converse";
+	private static final String converseAPI = "https://api.cai.tools.sap/v2/converse";
 
 	private String raw; // String: the raw unparsed json response								ok
 	private String uuid; // String: the universal unique id of the api call						ok

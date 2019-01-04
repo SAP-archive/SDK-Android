@@ -25,7 +25,7 @@ import java.util.Map;
  *
  */
 public class Client {
-    private static final String		sapcaiAPI = "https://api.cai.tool.sap/v2/request";
+    private static final String		sapcaiAPI = "https://api.cai.tools.sap/v2/request";
     private String					token;
 	private String					language;
     private SapcaiRecorder          recorder;

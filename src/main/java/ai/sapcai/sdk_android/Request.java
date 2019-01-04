@@ -16,8 +16,8 @@ import java.util.Map;
 
 public class Request {
 
-	private static final String	sapcaiAPI = "https://api.cai.tool.sap/v2/request";
-	private static final String converseAPI = "https://api.cai.tool.sap/v2/converse";
+	private static final String	sapcaiAPI = "https://api.cai.tools.sap/v2/request";
+	private static final String converseAPI = "https://api.cai.tools.sap/v2/converse";
 
 	public String token;
 	public String language;
