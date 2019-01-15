@@ -1,4 +1,4 @@
-package ai.recast.sdk_android;
+package ai.sapcai.sdk_android;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class Conversation {
 
-	private static final String converseAPI = "https://api.recast.ai/v2/converse";
+	private static final String converseAPI = "https://api.cai.tools.sap/v2/converse";
 
 	private String raw; // String: the raw unparsed json response								ok
 	private String uuid; // String: the universal unique id of the api call						ok
@@ -47,7 +47,7 @@ public class Conversation {
         public static final String SENTIMENT_VERY_NEGATIVE = "vnegative";
         public static final String SENTIMENT_NEUTRAL = "neutral";
 
-	public Conversation(String json, String token) throws RecastException {
+	public Conversation(String json, String token) throws SapcaiException {
 		this.setToken(token);
 		JSONArray	resultIntents = null;
 		JSONArray   resultNextActions = null;
@@ -107,7 +107,7 @@ public class Conversation {
             }
 
         } catch (Exception e) {
-            throw new RecastException("Invalid JSON", e);
+            throw new SapcaiException("Invalid JSON", e);
         }
 	}
 
@@ -186,11 +186,11 @@ public class Conversation {
 				}
 		        return json;
 			} catch (UnsupportedEncodingException e) {
-				throw new RecastException("Unable to read response from Recast", e);
+				throw new SapcaiException("Unable to read response from SAP Conversational AI", e);
 			} catch (ParseException e) {
-				throw new RecastException("Unable to read response from Recast", e);
+				throw new SapcaiException("Unable to read response from SAP Conversational AI", e);
 			} catch (IOException e) {
-				throw new RecastException("Unable to read response from Recast", e);
+				throw new SapcaiException("Unable to read response from SAP Conversational AI", e);
 			}
 
 	}

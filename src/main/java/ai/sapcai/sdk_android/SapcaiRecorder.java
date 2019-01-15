@@ -1,4 +1,4 @@
-package ai.recast.sdk_android;
+package ai.sapcai.sdk_android;
 
 
 import android.media.AudioFormat;
@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-class RecastRecorder {
+class SapcaiRecorder {
 
    static final int SAMPLE_RATE = 44100;
    static final int CHANNELS = 1;
@@ -19,13 +19,13 @@ class RecastRecorder {
    private boolean mRecording = false;
    private int mBufferSize;
    private int mFramePeriod;
-   private static String TAG = "RecastRecorder";
+   private static String TAG = "SapcaiRecorder";
    private String mFilepath;
    private int mSize;
    private byte[] mBuffer;
    private RandomAccessFile mFileWriter;
 
-   RecastRecorder (String file) throws RecastException {
+   SapcaiRecorder (String file) throws SapcaiException {
        mFilepath = file;
        mSize = 0;
 
@@ -46,13 +46,13 @@ class RecastRecorder {
                mBufferSize);
 
        if (mRecorder.getState() != AudioRecord.STATE_INITIALIZED) {
-           throw new RecastException("Record initialization failed");
+           throw new SapcaiException("Record initialization failed");
        }
        mBuffer = new byte[mBufferSize];
        try {
            this.initOutputFile();
        } catch (IOException e) {
-           throw new RecastException("Unable to open output file for recording");
+           throw new SapcaiException("Unable to open output file for recording");
        }
 
        AudioRecord.OnRecordPositionUpdateListener updater = new AudioRecord.OnRecordPositionUpdateListener() {
@@ -113,7 +113,7 @@ class RecastRecorder {
        }
    }
 
-   public void startRecording() throws RecastException {
+   public void startRecording() throws SapcaiException {
        mRecording = true;
        mRecorder.startRecording();
        mRecorder.read(mBuffer, 0, mBuffer.length);

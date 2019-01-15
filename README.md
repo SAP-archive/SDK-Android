@@ -1,9 +1,9 @@
-# Recast.AI - SDK-Android
-![Recast.AI Logo](https://cdn.recast.ai/brand/recast-ai-logo-inline.png)
-Recast.AI official SDK for Android.
+# SAP Conversational AI - SDK-Android
+![SAP Conversational AI Logo](https://cdn.cai.tools.sap/brand/sapcai/sap-cai-black.svg)
+SAP Conversational AI official SDK for Android.
 
 ## Synopsis
-This module is an Android interface to the [Recast.AI](https://recast.ai) API. It allows you to make requests to your bots.
+This module is an Android interface to the [SAP Conversational AI](https://cai.tools.sap) API. It allows you to make requests to your bots.
 
 ## Installation
 Just update your build.gradle files:
@@ -11,20 +11,20 @@ Just update your build.gradle files:
 In your module:
 ```gradle
 dependencies {
-  compile 'ai.recast.sdk_android:sdk-android:4.0.0'
+  compile 'ai.sapcai.sdk_android:sdk-android:4.0.0'
 }
 ```
 
 ## Usage
 ```java
-import ai.recast.sdk_android.Client;
+import ai.sapcai.sdk_android.Client;
 
 Client client = new Client(YOUR_TOKEN);
 Response resp;
 
 try {
   resp = client.textRequest(YOUR_TEXT);
-} catch (RecastException e) {
+} catch (SapcaiException e) {
   // error
 }
 ```
@@ -33,18 +33,18 @@ try {
 ### Classes
 
 This module contains 9 main classes as follows:
-* Client is the client allowing you to make requests to Recast.AI API.
-* Response contains the response from [Recast.AI](https://recast.ai).
-* Entity represents an entity found in you user's input as defined in [Recast.AI Manual](https://man.recast.ai/#list-of-entities)
+* Client is the client allowing you to make requests to SAP Conversational AI API.
+* Response contains the response from [SAP Conversational AI](https://cai.tools.sap).
+* Entity represents an entity found in you user's input as defined in [SAP Conversational AI Manual](https://cai.tools.sap/docs/#list-of-entities)
 * Intent represents the intent of your user
 * Action represents the actions of a conversation
 * Memory represents the memory of a conversation
 * MemoryEntity represents the entity inside the memory object
 * Conversation allowing you to handle a conversation
-* RecastException is the error thrown by the module.
+* SapcaiException is the error thrown by the module.
 
 ### Class Client
-The Recast.AI Client can be instanciated with a token and provides the following methods:
+The SAP Conversational AI Client can be instanciated with a token and provides the following methods:
 
 #### Request:
 * textRequest(String text)
@@ -59,13 +59,13 @@ This method return a Conversation object.
 
 #### Audio Recording:
 * startRecording() *Starts the audio recording to a file*
-* stopRecording() *Stops the audio recording, sends the audio to Recast.Ai and returns a Response object*
+* stopRecording() *Stops the audio recording, sends the audio to SAP Conversational AI and returns a Response object*
 
 Note that all these methods should be called in separated tasks because they do http requests.
 
 
 ```java
-import ai.recast.sdk_android.Client;
+import ai.sapcai.sdk_android.Client;
 
 Client client = new Client(YOUR_TOKEN);
 Response resp;
@@ -92,7 +92,7 @@ try {
 ```
 
 ### Class Response
-The Recast.AI Response is generated after a call with the Client methods and contains the following methods:
+The SAP Conversational AI Response is generated after a call with the Client methods and contains the following methods:
 * getAct() *Returns the act of the sentence*
 * getType() *Returns the type of the sentence*
 * getSentiment() *Returns the sentiment of the sentence*
@@ -100,7 +100,7 @@ The Recast.AI Response is generated after a call with the Client methods and con
 * getEntities(String name) *Returns an array of all entities matching -name- or null*
 * getStatus() *Returns the status of the Response*
 * getSource() *Returns the source of the input*
-* getIntent() *Returns the main intent detected by Recast.AI*
+* getIntent() *Returns the main intent detected by SAP Conversational AI*
 * getIntents() *Returns all intents ordered by probability*
 * getVersion() *Returns the version of the JSON*
 * getUuid() *Returns the uuid of the response*
@@ -135,7 +135,7 @@ if (intent != null && intent.equals("recipe")) {
 ```
 
 ### Class Entity
-The Recast.AI Entity is returned by Response and provides the following methods:
+The SAP Conversational AI Entity is returned by Response and provides the following methods:
 * String getName() *Returns the name of the entity*
 * String getRaw() *Returns the raw text on which the entity was detected*
 * Object getField(String fieldName)
@@ -157,9 +157,9 @@ In addition to getName and getRaw, more attributes can be accessed by the getFie
 * grain
 * order
 
-Recast.AI entity fields types are dependant on the entity itself, so value returned must be casted depending on the entity you wait.
+SAP Conversational AI entity fields types are dependant on the entity itself, so value returned must be casted depending on the entity you wait.
 
-Refer to [Recast.Ai Entities Manual](https://man.recast.ai/#list-of-entities) for details about entities
+Refer to [SAP Conversational AI Entities Manual](https://cai.tools.sap/docs/#list-of-entities) for details about entities
 
 ```java
 Response resp = client.textRequest("What's the weather in San Francisco?");
@@ -171,23 +171,18 @@ if (resp.getIntent() != null && resp.getIntent().equals("weather")) {
 }
 ```
 
-### Class RecastException
+### Class SapcaiException
 This exception is thrown when an error occurs during the request
 
 # More
 
-You can view the whole API reference at [man.recast.ai](https://man.recast.ai).
+You can view the whole API reference at [cai.tools.sap/docs/api-reference](https://cai.tools.sap/docs/api-reference).
 
-
-## Author
-
-François Triquet, francois.triquet@recast.ai
-
-You can follow us on Twitter at [@recastai](https://twitter.com/recastai) for updates and releases.
+You can follow us on Twitter at [@sapcai](https://twitter.com/sapcai) for updates and releases.
 
 ## License
 
-Copyright (c) [2017] [Recast.AI](https://recast.ai)
+Copyright (c) [2019] [SAP Conversational AI](https://cai.tools.sap)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

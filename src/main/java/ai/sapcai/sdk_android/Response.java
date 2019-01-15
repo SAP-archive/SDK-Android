@@ -1,4 +1,4 @@
-package ai.recast.sdk_android;
+package ai.sapcai.sdk_android;
 
 import org.json.*;
 
@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 /**
- * The Response class handles responses from Recast.AI API
+ * The Response class handles responses from SAP Conversational AI API
  *
  * @author Francois Triquet
  * @version 2.0.0
@@ -53,7 +53,7 @@ public class Response {
     public static final String SENTIMENT_NEUTRAL = "neutral";
 
 
-    Response(String json) throws RecastException {
+    Response(String json) throws SapcaiException {
         JSONArray	resultIntents = null;
         JSONObject	result;
         Pattern typePattern;
@@ -107,13 +107,13 @@ public class Response {
                 }
             }
         } catch (Exception e) {
-            throw new RecastException("Invalid JSON", e);
+            throw new SapcaiException("Invalid JSON", e);
         }
     }
 
     /**
      * Returns the user input
-     * @return The input sent to Recast
+     * @return The input sent to SAP Conversational AI
      */
     public String getSource() {
         return this.source;
@@ -153,7 +153,7 @@ public class Response {
     }
 
     /**
-     * Returns the json received from Recast
+     * Returns the json received from SAP Conversational AI
      * @return The raw json string
      */
     public String getRaw() {
@@ -171,7 +171,7 @@ public class Response {
 
     /**
      * Returns the version of the JSON
-     * @return The Recast version
+     * @return The SAP Conversational AI version
      */
     public String getVersion() {
         return this.version;

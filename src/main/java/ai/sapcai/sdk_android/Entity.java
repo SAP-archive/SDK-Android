@@ -1,9 +1,9 @@
-package ai.recast.sdk_android;
+package ai.sapcai.sdk_android;
 
 import org.json.JSONObject;
 
 /**
- * The Entity class represents an entity found by Recast.AI in the user input.
+ * The Entity class represents an entity found by SAP Conversational AI in the user input.
  *
  * @author Francois Triquet
  * @version 2.0.0

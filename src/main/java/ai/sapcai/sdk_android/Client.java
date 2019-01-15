@@ -1,4 +1,4 @@
-package ai.recast.sdk_android;
+package ai.sapcai.sdk_android;
 
 
 import android.os.Environment;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The Client class handles requests to Recast.AI API.
+ * The Client class handles requests to SAP Conversational AI API.
  * Note that requests methods and stopRecording should not be called in the main thread of your application because they process http requests.
  *
  * @author Francois Triquet
@@ -25,16 +25,16 @@ import java.util.Map;
  *
  */
 public class Client {
-    private static final String		recastAPI = "https://api.recast.ai/v2/request";
+    private static final String		sapcaiAPI = "https://api.cai.tools.sap/v2/request";
     private String					token;
 	private String					language;
-    private RecastRecorder          recorder;
+    private SapcaiRecorder          recorder;
 
     public Request request;
 
     /**
-     * Initialize a Recast.AI Client with a authentication token
-     * @param token Your token from Recast.AI
+     * Initialize a SAP Conversational AI Client with a authentication token
+     * @param token Your token from SAP Conversational AI
      */
     public Client(String token) {
         this.token = token;
@@ -53,7 +53,7 @@ public class Client {
 	}
 
     /**
-     * Initialize a Recast.AI Client without authentication token
+     * Initialize a SAP Conversational AI Client without authentication token
      */
     public Client() {
         this("", null);
@@ -61,7 +61,7 @@ public class Client {
 
     /**
      * Sets the token of the Client
-     * @param token The token to authenticate to Recast.AI
+     * @param token The token to authenticate to SAP Conversational AI
      */
     public void setToken(String token) {
         this.token = token;
@@ -76,46 +76,46 @@ public class Client {
 	}
 
    private static String getOutputFile() {
-       File recastDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/RecastAudio");
-       if (!recastDir.exists())
-           recastDir.mkdir();
+       File sapcaiDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/SAPConversationalAI");
+       if (!sapcaiDir.exists())
+           sapcaiDir.mkdir();
        String filepath = Environment.getExternalStorageDirectory().getAbsolutePath();
-       return filepath + "/RecastAudio/recast_audio.wav";
+       return filepath + "/SAPConversationalAI/sapcai_audio.wav";
    }
 
     /**
-     * Starts recording audio from the microphone. Note that the audio must be shorter than 10 seconds to be processed by Recast.AI
-     * @throws RecastException if the client is already recording (the recording will stop)
+     * Starts recording audio from the microphone. Note that the audio must be shorter than 10 seconds to be processed by SAP Conversational AI
+     * @throws SapcaiException if the client is already recording (the recording will stop)
      */
-   public synchronized void startRecording() throws RecastException {
+   public synchronized void startRecording() throws SapcaiException {
        if (recorder != null) {
            try {
                this.stopRecording();
            } catch (Exception ignore) {}
-           throw new RecastException("Invalid recording state");
+           throw new SapcaiException("Invalid recording state");
        }
-       recorder = new RecastRecorder(getOutputFile());
+       recorder = new SapcaiRecorder(getOutputFile());
        recorder.startRecording();
    }
 
     /**
      * Stops recording from the microphone and returns the Response corresponding to the audio input after beeing processed
-     * @return A Recast.AI Response
-     * @throws RecastException if the Client is not recording of if an error occurs (invalid audio...)
+     * @return A SAP Conversational AI Response
+     * @throws SapcaiException if the Client is not recording of if an error occurs (invalid audio...)
      * @see Response
      */
-   public synchronized Response stopRecording() throws RecastException {
+   public synchronized Response stopRecording() throws SapcaiException {
        Response r;
 
        if (this.recorder == null || !this.recorder.isRecording()) {
-           throw new RecastException("Illegal recording state");
+           throw new SapcaiException("Illegal recording state");
        }
        try {
            recorder.stopRecording();
            File f = new File(getOutputFile());
            r = fileRequest(getOutputFile());
        } catch (IOException e) {
-           throw new RecastException("Unable to record audio", e);
+           throw new SapcaiException("Unable to record audio", e);
        } finally {
            recorder = null;
        }
@@ -123,15 +123,15 @@ public class Client {
    }
 
     /**
-     * Performs a text request to Recast.AI
+     * Performs a text request to SAP Conversational AI
      * @param text The text to be processed
      * @param options A map of parameters to the request. Parameters can be "token" and "language"
      * @return The Response corresponding to the input
-     * @throws RecastException if Recast.AI can't process the text
+     * @throws SapcaiException if SAP Conversational AI can't process the text
      * @see Response
      */
-	public Response textRequest(String text, Map<String, String> options) throws RecastException {
-		String	recastJson;
+	public Response textRequest(String text, Map<String, String> options) throws SapcaiException {
+		String	sapcaiJson;
 		String	token;
 		String	language;
 
@@ -141,18 +141,18 @@ public class Client {
 		language = options.get("language");
 		if (language == null)
 			language = this.language;
-		recastJson = this.doApiRequest(text, token, language);
-		return new Response(recastJson);
+		sapcaiJson = this.doApiRequest(text, token, language);
+		return new Response(sapcaiJson);
 	}
 
     /**
-     * Performs a text request to Recast.AI with the token of the Client
+     * Performs a text request to SAP Conversational AI with the token of the Client
      * @param text The text to be processed
      * @return The Response corresponding to the input
-     * @throws RecastException if Recast.AI can't process the text
+     * @throws SapcaiException if SAP Conversational AI can't process the text
      * @see Response
      */
-    public Response	textRequest(String text) throws RecastException {
+    public Response	textRequest(String text) throws SapcaiException {
 		Map <String, String> params = new HashMap<>();
 		params.put("language", this.language);
 		params.put("token", this.token);
@@ -161,14 +161,14 @@ public class Client {
 
 
 
-    private String sendAudioFile(String name, String token, String language) throws RecastException {
-        String recastJson = "";
+    private String sendAudioFile(String name, String token, String language) throws SapcaiException {
+        String sapcaiJson = "";
 		StringBuilder sb;
         try {
-            MultipartUtility multipart = new MultipartUtility(recastAPI, "UTF-8", token);
+            MultipartUtility multipart = new MultipartUtility(sapcaiAPI, "UTF-8", token);
             File f = new File(name);
             if (!f.exists()) {
-                throw new RecastException("File not found: " + name);
+                throw new SapcaiException("File not found: " + name);
             }
             multipart.addFilePart("voice", f);
 			if (language != null) {
@@ -183,29 +183,29 @@ public class Client {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RecastException("Error during request", e);
+            throw new SapcaiException("Error during request", e);
         }
         return sb.toString();
     }
 
     /**
-     * Performs a voice file request to Recast.AI. Note that the audio must not exceed 10 seconds and be in wav format.
+     * Performs a voice file request to SAP Conversational AI. Note that the audio must not exceed 10 seconds and be in wav format.
      * @param filename The name of the file
      * @return The Response corresponding to your input
-     * @throws RecastException if the file is invalid or Recast.Ai can't process the file
+     * @throws SapcaiException if the file is invalid or SAP Conversational AI can't process the file
      */
-    public Response fileRequest(String filename) throws RecastException {
+    public Response fileRequest(String filename) throws SapcaiException {
         return new Response(this.sendAudioFile(filename, this.token, null));
     }
 
     /**
-     * Performs a voice file request to Recast.AI. Note that the audio must not exceed 10 seconds and be in wav format.
+     * Performs a voice file request to SAP Conversational AI. Note that the audio must not exceed 10 seconds and be in wav format.
      * @param filename The name of the file
      * @param options A map of parameters for the request. This map can contains "token" and/or "language".If a parameter is not provided, the request will use the token or language of the Client. I it has not language, the language used will be the default language of the corresponding bot
      * @return The Response corresponding to your input
-     * @throws RecastException if the file is invalid or Recast.Ai can't process the file
+     * @throws SapcaiException if the file is invalid or SAP Conversational AI can't process the file
      */
-    public Response fileRequest(String filename, Map<String,String> options) throws RecastException {
+    public Response fileRequest(String filename, Map<String,String> options) throws SapcaiException {
 		String token;
 		String language;
 
@@ -220,17 +220,17 @@ public class Client {
     }
 
 
-    public String			doApiRequest(String text, String token, String language) throws RecastException {
+    public String			doApiRequest(String text, String token, String language) throws SapcaiException {
         URL					obj;
         HttpsURLConnection	con;
         OutputStream		os;
         int					responseCode;
         String				inputLine;
         StringBuffer		responseBuffer;
-        String				recastJson;
+        String				sapcaiJson;
 
         try {
-            obj = new URL(recastAPI);
+            obj = new URL(sapcaiAPI);
             con = (HttpsURLConnection) obj.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Authorization",  "Token " + token);
@@ -247,9 +247,9 @@ public class Client {
 
             responseCode = con.getResponseCode();
         } catch (MalformedURLException e) {
-            throw new RecastException("Invalid URL", e);
+            throw new SapcaiException("Invalid URL", e);
         } catch (IOException e) {
-            throw new RecastException("Unable to read response from Recast", e);
+            throw new SapcaiException("Unable to read response from SAP Conversational AI", e);
         }
 
         if (responseCode == HttpsURLConnection.HTTP_OK) {
@@ -261,13 +261,13 @@ public class Client {
                 }
                 reader.close();
             } catch (IOException e) {
-                throw new RecastException("Unable to read response from Recast", e);
+                throw new SapcaiException("Unable to read response from SAP Conversational AI", e);
             }
-            recastJson = responseBuffer.toString();
+            sapcaiJson = responseBuffer.toString();
         } else {
             System.out.println(responseCode);
-            throw new RecastException(responseCode);
+            throw new SapcaiException(responseCode);
         }
-        return recastJson;
+        return sapcaiJson;
     }
 }
